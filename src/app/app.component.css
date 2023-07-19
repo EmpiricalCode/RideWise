@@ -26,6 +26,7 @@
     font-family: "Gotham Medium";
     cursor: pointer;
     color: var(--foreground);
+    text-decoration: none;
 }
 
 #site-title {
@@ -33,4 +34,9 @@
     font-family: "Montserrat";
     font-weight: 600;
     margin-left: 10px;
+}
+
+/* Class selectors */
+.nav-bar-link-active {
+    text-decoration: underline !important;
 }

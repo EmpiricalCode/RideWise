@@ -6,10 +6,10 @@
   </div>
 
   <div id="nav-bar-right">
-    <a>Home</a>
-    <a>Explore</a>
-    <a>Contact</a>
-    <a>About</a>
+    <a href="/" [routerLink]="'/'" [routerLinkActive]="'nav-bar-link-active'" [routerLinkActiveOptions]="{exact: true}">Home</a>
+    <a href="/explore" [routerLink]="'/explore'" [routerLinkActive]="'nav-bar-link-active'">Explore</a>
+    <a href="/contact" [routerLink]="'/contact'" [routerLinkActive]="'nav-bar-link-active'">Contact</a>
+    <a href="/about" [routerLink]="'/about'" [routerLinkActive]="'nav-bar-link-active'">About</a>
   </div>
 </div>
 
