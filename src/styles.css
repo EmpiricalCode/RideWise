@@ -11,7 +11,7 @@
 }
 
 :root:has(#test:checked) {
-    --foreground: rgb(140, 175, 207);
+    --foreground: rgb(111, 144, 194);
     --background: rgb(25, 26, 28);
     --title-color: rgb(198, 198, 198);
     --text-color: rgb(159, 159, 159);

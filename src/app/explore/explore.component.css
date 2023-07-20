@@ -29,6 +29,7 @@
     font-family: "Montserrat";
     font-size: 50px;
     margin-bottom: 0px;
+    margin-top: 40px;
     color: var(--foreground)
 }
 
@@ -44,7 +45,7 @@
 .section-title {
     font-family: "Gotham Medium";
     color: var(--title-color);
-    font-size: 20px;
+    font-size: 21px;
 }
 
 .section-subtitle {
