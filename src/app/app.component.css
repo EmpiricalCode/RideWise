@@ -29,6 +29,10 @@
     text-decoration: none;
 }
 
+#nav-bar-right a:hover {
+    text-decoration: underline;
+}
+
 #site-title {
     font-size: 20px;
     font-family: "Montserrat";
