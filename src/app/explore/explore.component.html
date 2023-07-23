@@ -1,22 +1,55 @@
 <div id="content-container">
-    <div id="map-container"></div>
+    <div id="map-container">
+
+        <div id="map-configuration-container">
+            <div class="input-section">
+                <p class="section-title">Starting Point</p>
+                <input spellcheck="false" placeholder="Enter a Starting Point" class="map-configuration-input">
+            </div>
+
+            <div id="input-separator">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+
+            <div class="input-section">
+                <p class="section-title">Ending Point</p>
+                <input spellcheck="false" placeholder="Enter an Ending Point" class="map-configuration-input">
+            </div>
+
+            <button id="go-button">Go</button>
+        </div>
+
+        <div id="map">
+
+        </div>
+    </div>
 
     <div id="info-container">
         <p class="section-title">Ride Details</p>
         <p id="distance-kilometers">16 Kilometers</p>
         <p id="distance-miles">5.6 Miles</p>
 
-        <p class="section-subtitle">Time Elapsed</p>
-        <p class="section-text">1 Hour 12 Minutes</p>
-        <p class="section-text">9:45 PM Arrival</p>
+        <div id="info-snippet-container">
+            <div class="info-snippet">
+                <p class="info-snippet-title">Time Elapsed</p>
+                <p class="info-snippet-text">1 Hour 12 Minutes</p>
+                <p class="info-snippet-text">9:45 PM Arrival</p>
+            </div>
 
-        <p class="section-subtitle">Exercise</p>
-        <p class="section-text">597 Calories Burned</p>
+            <div class="info-snippet">
+                <p class="info-snippet-title">Exercise</p>
+                <p class="info-snippet-text">597 Calories Burned</p>
+            </div>
 
-        <p class="section-subtitle">Other Information</p>
-        <p class="section-text">210 Meters Above Sea Level</p>
+            <div class="info-snippet">
+                <p class="info-snippet-title">Other Information</p>
+                <p class="info-snippet-text">210 Meters Above Sea Level</p>
+            </div>
+        </div>
 
-        <p class="section-subtitle">Alerts</p>
+        <p class="section-title">Alerts</p>
         <div id="alert-container">
             <div class="alert severe">
                 Severe Thunderstorm Warning
