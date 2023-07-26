@@ -80,6 +80,22 @@ export class ExploreComponent implements AfterViewInit {
     })
   }
 
+  fitBounds(routePoints: any) {
+
+    var bounds = new tt.LngLatBounds();
+
+    bounds.extend(new tt.LngLat(this.startPosition.lon as number, this.startPosition.lat as number));
+    bounds.extend(new tt.LngLat(this.endPosition.lon as number, this.endPosition.lat as number));
+
+    for (var boundItem of routePoints) {
+      bounds.extend(new tt.LngLat(boundItem.lng as number, boundItem.lat as number));
+    }
+
+    this.map.fitBounds(bounds, {
+      padding: {top: 30, right: 30, bottom: 30, left: 30}
+    }) 
+  }
+
   createMarker(position: any) {
     var markerElement = document.createElement("div");
 
@@ -92,7 +108,7 @@ export class ExploreComponent implements AfterViewInit {
   }
 
   removeRoute() {
-    if (this.map.getLayer("route") != undefined) {
+    if (this.map.getLayer("route")) {
       this.map.removeLayer("route"); 
       this.map.removeSource('route');
     }
@@ -100,7 +116,7 @@ export class ExploreComponent implements AfterViewInit {
 
   createRoute() {
 
-    if (this.startPosition != undefined && this.endPosition != undefined) {
+    if (this.startPosition && this.endPosition) {
 
       this.removeRoute();
 
@@ -127,7 +143,10 @@ export class ExploreComponent implements AfterViewInit {
             "line-color" : "rgb(46, 135, 240)",
             "line-width" : 5,
           }
-        });
+        }); 
+
+        this.fitBounds(data.routes[0].legs[0].points);
+
       }).catch((error) => {
         console.log(error);
       })
@@ -150,9 +169,15 @@ export class ExploreComponent implements AfterViewInit {
 
     this.startPosition = result.position;
     this.inputStart.nativeElement.value = result.address.freeformAddress;
-    this.searchStartPoint(this.inputStart.nativeElement.value);
 
+    this.searchStartPoint(this.inputStart.nativeElement.value);
     this.removeRoute();
+
+    if (this.endPosition) {
+      this.fitBounds([]);
+    } else {
+      this.map.setCenter(this.startPosition);
+    }
   }
 
   selectEndPoint(result: any) {
@@ -171,9 +196,15 @@ export class ExploreComponent implements AfterViewInit {
 
     this.endPosition = result.position;
     this.inputEnd.nativeElement.value = result.address.freeformAddress;
-    this.searchEndPoint(this.inputEnd.nativeElement.value);
 
+    this.searchEndPoint(this.inputEnd.nativeElement.value);
     this.removeRoute();
+    
+    if (this.startPosition) {
+      this.fitBounds([]);
+    } else {
+      this.map.setCenter(this.endPosition);
+    }
   }
 
   searchStartPoint(query: String) {
