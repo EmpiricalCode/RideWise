@@ -91,14 +91,18 @@ export class ExploreComponent implements AfterViewInit {
     return markerElement;
   }
 
+  removeRoute() {
+    if (this.map.getLayer("route") != undefined) {
+      this.map.removeLayer("route"); 
+      this.map.removeSource('route');
+    }
+  }
+
   createRoute() {
 
     if (this.startPosition != undefined && this.endPosition != undefined) {
 
-      if (this.map.getLayer("route") != undefined) {
-        this.map.removeLayer("route"); 
-        this.map.removeSource('route');
-      }
+      this.removeRoute();
 
       var routeOptions = {
         key: "ImJQ5OE7KBtQRP09rOL4mQXtlKm4qydm",
@@ -148,7 +152,7 @@ export class ExploreComponent implements AfterViewInit {
     this.inputStart.nativeElement.value = result.address.freeformAddress;
     this.searchStartPoint(this.inputStart.nativeElement.value);
 
-    this.createRoute();
+    this.removeRoute();
   }
 
   selectEndPoint(result: any) {
@@ -169,7 +173,7 @@ export class ExploreComponent implements AfterViewInit {
     this.inputEnd.nativeElement.value = result.address.freeformAddress;
     this.searchEndPoint(this.inputEnd.nativeElement.value);
 
-    this.createRoute();
+    this.removeRoute();
   }
 
   searchStartPoint(query: String) {
