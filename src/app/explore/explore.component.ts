@@ -95,6 +95,11 @@ export class ExploreComponent implements AfterViewInit {
 
     if (this.startPosition != undefined && this.endPosition != undefined) {
 
+      if (this.map.getLayer("route") != undefined) {
+        this.map.removeLayer("route"); 
+        this.map.removeSource('route');
+      }
+
       var routeOptions = {
         key: "ImJQ5OE7KBtQRP09rOL4mQXtlKm4qydm",
         locations: [this.startPosition, this.endPosition],
@@ -102,11 +107,6 @@ export class ExploreComponent implements AfterViewInit {
       }
 
       services.calculateRoute(routeOptions).then((data) => {
-
-        if (this.map.getLayer("route") != undefined) {
-          this.map.removeLayer("route"); 
-          this.map.removeSource('route');
-        }
 
         this.map.addLayer({
           "id" : "route",
@@ -124,7 +124,9 @@ export class ExploreComponent implements AfterViewInit {
             "line-width" : 5,
           }
         });
-      });
+      }).catch((error) => {
+        console.log(error);
+      })
     }
   }
 
