@@ -20,6 +20,8 @@ export class ExploreComponent implements AfterViewInit {
   @ViewChild("inputStartAutocomplete") inputStartAutocomplete!: ElementRef;
   @ViewChild("inputEndAutocomplete") inputEndAutocomplete!: ElementRef;
 
+  @ViewChild("mapNotificationContainer") mapNotificationContainer!: ElementRef;
+
   // Instance variables
   lightTheme: string = "https://api.tomtom.com/style/1/style/22.2.1-9?key=ImJQ5OE7KBtQRP09rOL4mQXtlKm4qydm&map=2/basic_street-light";
   darkTheme: string = "https://api.tomtom.com/style/1/style/22.2.1-9?key=ImJQ5OE7KBtQRP09rOL4mQXtlKm4qydm&map=2/basic_street-dark";
@@ -31,6 +33,8 @@ export class ExploreComponent implements AfterViewInit {
 
   startPosition: any;
   endPosition: any;
+
+  calculatingRoute: boolean = false;
 
   location: Observable<any> = new Observable<any>((observer) => {
     navigator.geolocation.getCurrentPosition((position: any) => {
@@ -80,6 +84,33 @@ export class ExploreComponent implements AfterViewInit {
     })
   }
 
+  spawnMapNotification(message: string, error: boolean, duration: number) {
+    
+    var notificationElement = document.createElement("div");
+
+    notificationElement.classList.add("map-notification");
+    notificationElement.classList.add("transparent");
+    notificationElement.innerHTML = message;
+
+    if (error) {
+      notificationElement.classList.add("map-notification-error");
+    }
+
+    this.mapNotificationContainer.nativeElement.append(notificationElement);
+
+    setTimeout(() => {
+      notificationElement.classList.remove("transparent");
+    }, 10);
+
+    setTimeout(() => {
+      notificationElement.classList.add("transparent");
+
+      setTimeout(() => {
+        notificationElement.remove();
+      }, 200);
+    }, duration);
+  }
+
   fitBounds(routePoints: any) {
 
     var bounds = new tt.LngLatBounds();
@@ -116,9 +147,11 @@ export class ExploreComponent implements AfterViewInit {
 
   createRoute() {
 
-    if (this.startPosition && this.endPosition) {
+    if (this.startPosition && this.endPosition && !this.calculatingRoute) {
 
+      this.calculatingRoute = true;
       this.removeRoute();
+      this.spawnMapNotification("Calculating route...", false, 1000);
 
       var routeOptions = {
         key: "ImJQ5OE7KBtQRP09rOL4mQXtlKm4qydm",
@@ -146,9 +179,14 @@ export class ExploreComponent implements AfterViewInit {
         }); 
 
         this.fitBounds(data.routes[0].legs[0].points);
+        this.spawnMapNotification("Route successfully calculated.", false, 1000);
+        this.calculatingRoute = false;
 
       }).catch((error) => {
         console.log(error);
+        
+        this.spawnMapNotification("ERROR: " + error.detailedError.message, true, 3000);
+        this.calculatingRoute = false;
       })
     }
   }
