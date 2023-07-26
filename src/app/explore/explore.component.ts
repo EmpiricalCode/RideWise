@@ -151,7 +151,7 @@ export class ExploreComponent implements AfterViewInit {
 
       this.calculatingRoute = true;
       this.removeRoute();
-      this.spawnMapNotification("Calculating route...", false, 1000);
+      this.spawnMapNotification("Calculating route...", false, 1500);
 
       var routeOptions = {
         key: "ImJQ5OE7KBtQRP09rOL4mQXtlKm4qydm",
@@ -179,7 +179,7 @@ export class ExploreComponent implements AfterViewInit {
         }); 
 
         this.fitBounds(data.routes[0].legs[0].points);
-        this.spawnMapNotification("Route successfully calculated.", false, 1000);
+        this.spawnMapNotification("Route successfully calculated.", false, 1500);
         this.calculatingRoute = false;
 
       }).catch((error) => {
