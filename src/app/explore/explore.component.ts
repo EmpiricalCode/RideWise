@@ -41,10 +41,12 @@ export class ExploreComponent implements AfterViewInit {
   startingPointAutocompleteResults: any = [];
   endingPointAutocompleteResults: any = [];
 
+  // Constructor
   constructor(private titleService: Title, private http: HttpClient) { 
     this.titleService.setTitle("RideWise - Explore");
   }
 
+  // Methods
   ngAfterViewInit() {
 
     this.map = tt.map({
@@ -95,7 +97,8 @@ export class ExploreComponent implements AfterViewInit {
 
       var routeOptions = {
         key: "ImJQ5OE7KBtQRP09rOL4mQXtlKm4qydm",
-        locations: [this.startPosition, this.endPosition]
+        locations: [this.startPosition, this.endPosition],
+        travelMode: "bicycle" as any
       }
 
       services.calculateRoute(routeOptions).then((data) => {
@@ -159,7 +162,7 @@ export class ExploreComponent implements AfterViewInit {
     endMarkerElement.classList.add("end-marker");
 
     endMarkerElement.append(designatorElement);
-    
+
     this.endPosition = result.position;
     this.inputEnd.nativeElement.value = result.address.freeformAddress;
     this.searchEndPoint(this.inputEnd.nativeElement.value);
