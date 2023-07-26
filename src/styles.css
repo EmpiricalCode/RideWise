@@ -2,23 +2,28 @@
 /* TEMPORARY */
 :root {
     --foreground: rgb(70, 105, 156);
-    --background: white;
-    --title-color: rgb(19, 19, 19);
+    --background: 255, 255, 255;
+    --title-color: rgb(30, 30, 30);
     --text-color: rgb(60, 59, 59);
     --border-color: rgb(220, 220, 220);
     --input-background-color: rgb(242, 242, 242);
+    
+    --input-autocomplete-hover-color: rgb(245, 245, 245);
 
     --alert-severe: rgb(192, 105, 105);
     --alert-moderate: rgb(154, 139, 57);
 }
 
+/* Dark Theme */
 :root:has(#test:checked) {
     --foreground: rgb(111, 144, 194);
-    --background: rgb(25, 26, 28);
-    --title-color: rgb(198, 198, 198);
+    --background: 25, 26, 28;
+    --title-color: rgb(234, 234, 234);
     --text-color: rgb(159, 159, 159);
     --border-color: rgb(51, 51, 51);
     --input-background-color: rgb(41, 41, 41);
+
+    --input-autocomplete-hover-color: rgb(30, 30, 30);
 }
 
 :root:has(#light-theme:checked) {
@@ -34,12 +39,38 @@
     padding: 0 100px 0 100px;
 }
 
+/* Class selectors */
+.mapboxgl-marker {
+    width: 16px;
+    height: 16px;
+    border-radius: 12px;
+    background-color: white;
+    border: 4px solid rgb(46, 135, 240);
+}
+
+.start-marker-designator {
+    width: 10px;
+    height: 10px;
+    background: green;
+    border-radius: 5px;
+    margin-left: 3px;
+    margin-top: 3px;
+}
+
+.end-marker-designator {
+    width: 10px;
+    height: 10px;
+    background: rgb(223, 90, 90);
+    border-radius: 5px;
+    margin-left: 3px;
+    margin-top: 3px;
+}
+
 /* Element selectors */
 body {
     margin: 0;
     padding: 0;
-    background: var(--background);
-    transition: 0.5s;
+    background: rgb(var(--background));
 }
 
 canvas {
