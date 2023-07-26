@@ -66,6 +66,10 @@
     margin-top: 3px;
 }
 
+.mapboxgl-ctrl-attrib {
+    display: none;
+}
+
 /* Element selectors */
 body {
     margin: 0;
