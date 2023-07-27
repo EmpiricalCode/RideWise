@@ -6,7 +6,7 @@
                 <p class="section-title">Starting Point</p>
                 <div class="map-configuration-input-container">
                     <img class="map-configuration-input-icon" src="../../assets/images/search-icon.png">
-                    <input #inputStart spellcheck="false" (focus)="inputStart.value.length > 1 ? inputStartAutocomplete.style.display='block' : null" (input)="searchStartPoint(inputStart.value)" placeholder="Enter a Starting Point" class="map-configuration-input">
+                    <input #inputStart spellcheck="false" (focus)="inputStart.value.length > 1 ? inputStartAutocomplete.style.display='block' : null" (input)="searchStartPoint(inputStart.value)" placeholder="Enter Starting Point" class="map-configuration-input">
                 </div>
 
                 <div #inputStartAutocomplete class="input-autocomplete-container-outer">
@@ -32,7 +32,7 @@
                 <p class="section-title">Ending Point</p>
                 <div class="map-configuration-input-container">
                     <img class="map-configuration-input-icon" src="../../assets/images/search-icon.png">
-                    <input #inputEnd spellcheck="false" (focus)="inputEnd.value.length > 1 ? inputEndAutocomplete.style.display='block' : null" (input)="searchEndPoint(inputEnd.value)" placeholder="Enter a Starting Point" class="map-configuration-input">
+                    <input #inputEnd spellcheck="false" (focus)="inputEnd.value.length > 1 ? inputEndAutocomplete.style.display='block' : null" (input)="searchEndPoint(inputEnd.value)" placeholder="Enter Ending Point" class="map-configuration-input">
                 </div>
 
                 <div #inputEndAutocomplete class="input-autocomplete-container-outer">
