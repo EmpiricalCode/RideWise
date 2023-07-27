@@ -83,7 +83,7 @@
     padding-right: 20px;
     margin-bottom: 10px;
     background: rgb(var(--background));
-    border: 1px solid var(--border-color);
+    border: 1px solid rgb(var(--background));
     color: var(--text-color);
     transition: 0.2s;
 }
@@ -91,6 +91,12 @@
 .map-notification-error {
     background-color: var(--alert-severe);
     border-color: var(--alert-severe);
+    color: white;
+}
+
+.map-notification-success {
+    background-color: rgb(85, 136, 75);
+    border-color: rgb(85, 136, 75);
     color: white;
 }
 

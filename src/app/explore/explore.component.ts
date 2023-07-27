@@ -84,7 +84,7 @@ export class ExploreComponent implements AfterViewInit {
     })
   }
 
-  spawnMapNotification(message: string, error: boolean, duration: number) {
+  spawnMapNotification(message: string, type: string, duration: number) {
     
     var notificationElement = document.createElement("div");
 
@@ -92,8 +92,10 @@ export class ExploreComponent implements AfterViewInit {
     notificationElement.classList.add("transparent");
     notificationElement.innerHTML = message;
 
-    if (error) {
+    if (type == "error") {
       notificationElement.classList.add("map-notification-error");
+    } else if (type == "success") {
+      notificationElement.classList.add("map-notification-success");
     }
 
     this.mapNotificationContainer.nativeElement.append(notificationElement);
@@ -151,7 +153,7 @@ export class ExploreComponent implements AfterViewInit {
 
       this.calculatingRoute = true;
       this.removeRoute();
-      this.spawnMapNotification("Calculating route...", false, 1500);
+      this.spawnMapNotification("Calculating route...", "", 1500);
 
       var routeOptions = {
         key: "ImJQ5OE7KBtQRP09rOL4mQXtlKm4qydm",
@@ -178,14 +180,17 @@ export class ExploreComponent implements AfterViewInit {
           }
         }); 
 
+        console.log(data.routes);
+        
+
         this.fitBounds(data.routes[0].legs[0].points);
-        this.spawnMapNotification("Route successfully calculated.", false, 1500);
+        this.spawnMapNotification("Route successfully calculated.", "success", 1500);
         this.calculatingRoute = false;
 
       }).catch((error) => {
         console.log(error);
         
-        this.spawnMapNotification("ERROR: " + error.detailedError.message, true, 3000);
+        this.spawnMapNotification("ERROR: " + error.detailedError.message, "error", 3000);
         this.calculatingRoute = false;
       })
     }
