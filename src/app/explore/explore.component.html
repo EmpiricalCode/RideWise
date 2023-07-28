@@ -51,17 +51,11 @@
             <button id="go-button" (click)="createRoute()">Go</button>
         </div>
 
-        <div id="map">
-            <div #mapNotificationContainer id="map-notification-container"></div>
-        </div>
-
-        <div id="weather-container" style="background-image: url('../../assets/images/overcast.jpeg')">
-            <div id="weather-container-gradient">
-                <p class="section-title" style="margin-top: 5px;">Departure Conditions</p>
-                <p id="weather-forcast">Overcast</p>
-                <p id="temperature">25 °C</p>
+        <section id="map-inner-container">
+            <div id="map">
+                <div #mapNotificationContainer id="map-notification-container"></div>
             </div>
-        </div>
+        </section>
     </div>
 
     <div id="info-container">
@@ -72,20 +66,30 @@
             <p #distanceMiles id="distance-miles">5.6 Miles</p>
 
             <div id="info-snippet-container">
+
+                <!-- <div id="weather-container" style="background-image: url('../../assets/images/overcast.jpeg')">
+                    <div id="weather-container-gradient">
+                        <p class="info-snippet-title" style="margin-top: 0; margin-bottom: 10px;">Departure Conditions</p>
+                        <p id="weather-forcast">Overcast</p>
+                        <p id="temperature">25 °C</p>
+                    </div>
+                </div> -->
+
+                <div class="info-snippet">
+                    <p class="info-snippet-title">Departure Conditions</p>
+                    <p id="weather-forcast">Overcast</p>
+                    <p id="temperature">25 °C</p>
+                </div>
+
                 <div class="info-snippet">
                     <p class="info-snippet-title">Time Elapsed</p>
                     <p #rideDuration class="info-snippet-text">1 Hour 12 Minutes</p>
                 </div>
 
-                <div class="info-snippet">  
-                    <p class="info-snippet-title">Exercise</p>
-                    <p #caloriesBurned class="info-snippet-text">597 Calories Burned</p>
-                </div>
-
                 <div class="info-snippet">
                     <p class="info-snippet-title">Other Information</p>
                     <p #altitudeChange class="info-snippet-text">210 Meters Above Sea Level</p>
-                </div>
+                </div>                
             </div>
 
             <p #alertTitle class="section-title">Alerts</p>

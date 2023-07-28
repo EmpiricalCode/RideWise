@@ -71,6 +71,8 @@ export class ExploreComponent implements AfterViewInit {
       zoom: 16,
     })
 
+    this.map.dragRotate.disable();
+
     navigator.geolocation.getCurrentPosition((position: any) => {
       this.position = position;
       this.map.setCenter([position.coords.longitude, position.coords.latitude]);
