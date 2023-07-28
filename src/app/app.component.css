@@ -24,7 +24,7 @@
     display: flex;
     justify-content: flex-end;
     flex-grow: 1;
-    column-gap: 90px;
+    column-gap: 70px;
 }
 
 #nav-bar-right a {
@@ -33,10 +33,13 @@
     cursor: pointer;
     color: var(--foreground);
     text-decoration: none;
+    padding: 10px 15px 10px 15px;
+    border-radius: 10px;
+    transition: 0.2s;
 }
 
 #nav-bar-right a:hover {
-    text-decoration: underline;
+    /* text-decoration: underline; */
 }
 
 #site-title {
@@ -48,5 +51,8 @@
 
 /* Class selectors */
 .nav-bar-link-active {
-    text-decoration: underline !important;
+    /* text-decoration: underline !important; */
+    /* font-weight: bold; */
+    color: white !important;
+    background: var(--foreground);
 }
