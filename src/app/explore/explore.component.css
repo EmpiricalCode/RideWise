@@ -43,9 +43,13 @@
 }
 
 #info-container {
-    width: 370px;
+    width: 390px;
     padding-right: 50px;
     padding-bottom: 50px;
+}
+
+#info-content-container {
+    transition: 0.3s;
 }
 
 #map-container {

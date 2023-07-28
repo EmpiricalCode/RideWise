@@ -22,11 +22,22 @@ export class ExploreComponent implements AfterViewInit {
 
   @ViewChild("mapNotificationContainer") mapNotificationContainer!: ElementRef;
 
+  @ViewChild("infoContentContainer") infoContentContainer!: ElementRef;
+  @ViewChild("alertTitle") alertTitle!: ElementRef;
+  @ViewChild("alertContainer") alertContainer!: ElementRef;
+
+  @ViewChild("distanceKilometers") distanceKilometers!: ElementRef;
+  @ViewChild("distanceMiles") distanceMiles!: ElementRef;
+  @ViewChild("rideDuration") rideDuration!: ElementRef;
+  @ViewChild("caloriesBurned") caloriesBurned!: ElementRef;
+  @ViewChild("altitudeChange") altitudeChange!: ElementRef;
+
   // Instance variables
   lightTheme: string = "https://api.tomtom.com/style/1/style/22.2.1-9?key=ImJQ5OE7KBtQRP09rOL4mQXtlKm4qydm&map=2/basic_street-light";
   darkTheme: string = "https://api.tomtom.com/style/1/style/22.2.1-9?key=ImJQ5OE7KBtQRP09rOL4mQXtlKm4qydm&map=2/basic_street-dark";
 
   searchUrl: string = "https://api.tomtom.com/search/2/search";
+  altitudeUrl: string ="https://api.opentopodata.org/v1/eudem25m?locations=";
 
   map: any;
   position: any;
@@ -82,6 +93,21 @@ export class ExploreComponent implements AfterViewInit {
         this.inputEndAutocomplete.nativeElement.style.display = "none";
       } 
     })
+  }
+
+  hideInfo(callback: any) {
+    this.infoContentContainer.nativeElement.style.opacity = "0";
+
+    setTimeout(() => {
+      this.alertContainer.nativeElement.innerHTML = "";
+      this.alertTitle.nativeElement.style.display = "none";
+
+      callback();
+    }, 300);
+  }
+
+  showInfo() {
+    this.infoContentContainer.nativeElement.style.opacity = "1";
   }
 
   spawnMapNotification(message: string, type: string, duration: number) {
@@ -161,39 +187,63 @@ export class ExploreComponent implements AfterViewInit {
         travelMode: "bicycle" as any
       }
 
-      services.calculateRoute(routeOptions).then((data) => {
+      this.hideInfo(() => {
 
-        this.map.addLayer({
-          "id" : "route",
-          "type" : "line",
-          "source" : {
-            "type" : "geojson",
-            "data" : data.toGeoJson()
-          },
-          "layout" : {
-            "line-join" : "round",
-            "line-cap" : "round"
-          },
-          "paint" : {
-            "line-color" : "rgb(46, 135, 240)",
-            "line-width" : 5,
+        services.calculateRoute(routeOptions).then((data) => {
+
+          const summaryData = data.routes[0].summary;
+          const lengthInMeters = summaryData.lengthInMeters;
+          const timeData = new Date(summaryData.travelTimeInSeconds * 1000).toISOString().substring(11, 16).split(":").map(Number);
+          
+          if (timeData[0] > 0) {
+            this.rideDuration.nativeElement.innerHTML = timeData[0] + (timeData[0] > 1 ? " Hours " : " Hour ") + timeData[1] + (timeData[1] > 1 ? " Minutes" : " Minute");
+          } else if (timeData[1] > 0) {
+            this.rideDuration.nativeElement.innerHTML = timeData[1] + (timeData[1] > 1 ? " Minutes " : " Minute");
+          } else {
+            this.rideDuration.nativeElement.innerHTML = "Less Than 1 Minute";
           }
-        }); 
 
-        console.log(data.routes);
-        
+          if (lengthInMeters < 1000) {
+            this.distanceKilometers.nativeElement.innerHTML = `${Math.round(lengthInMeters / 10) / 100} Kilometers`;
+            this.distanceMiles.nativeElement.innerHTML = `${Math.round(lengthInMeters * 0.621371 / 10)/ 100} Miles`;
+          } else if (lengthInMeters < 10000) {
+            this.distanceKilometers.nativeElement.innerHTML = `${Math.round(lengthInMeters / 100) / 10} Kilometers`;
+            this.distanceMiles.nativeElement.innerHTML = `${Math.round(lengthInMeters * 0.621371 / 100)/ 10} Miles`;
+          } else {
+            this.distanceKilometers.nativeElement.innerHTML = `${Math.round(lengthInMeters / 1000).toLocaleString("en-US")} Kilometers`;
+            this.distanceMiles.nativeElement.innerHTML = `${Math.round(lengthInMeters * 0.621371 / 1000).toLocaleString("en-US")} Miles`;
+          }
 
-        this.fitBounds(data.routes[0].legs[0].points);
-        this.spawnMapNotification("Route successfully calculated.", "success", 1500);
-        this.calculatingRoute = false;
+          this.map.addLayer({
+            "id" : "route",
+            "type" : "line",
+            "source" : {
+              "type" : "geojson",
+              "data" : data.toGeoJson()
+            },
+            "layout" : {
+              "line-join" : "round",
+              "line-cap" : "round"
+            },
+            "paint" : {
+              "line-color" : "rgb(46, 135, 240)",
+              "line-width" : 5,
+            }
+          }); 
 
-      }).catch((error) => {
-        console.log(error);
-        
-        this.spawnMapNotification("ERROR: " + error.detailedError.message, "error", 3000);
-        this.calculatingRoute = false;
+          this.fitBounds(data.routes[0].legs[0].points);
+          this.spawnMapNotification("Route successfully calculated.", "success", 1500);
+          this.showInfo();
+          this.calculatingRoute = false;
+
+        }).catch((error) => {
+          console.log(error);
+          
+          this.spawnMapNotification("ERROR: " + error.detailedError.message, "error", 3000);
+          this.calculatingRoute = false;
+        })
       })
-    }
+    } 
   }
 
   selectStartPoint(result: any) {
