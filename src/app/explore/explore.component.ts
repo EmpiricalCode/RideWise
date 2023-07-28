@@ -196,14 +196,21 @@ export class ExploreComponent implements AfterViewInit {
           const summaryData = data.routes[0].summary;
           const lengthInMeters = summaryData.lengthInMeters;
           const timeData = new Date(summaryData.travelTimeInSeconds * 1000).toISOString().substring(11, 16).split(":").map(Number);
+          var timeDataString = "";
           
           if (timeData[0] > 0) {
-            this.rideDuration.nativeElement.innerHTML = timeData[0] + (timeData[0] > 1 ? " Hours " : " Hour ") + timeData[1] + (timeData[1] > 1 ? " Minutes" : " Minute");
-          } else if (timeData[1] > 0) {
-            this.rideDuration.nativeElement.innerHTML = timeData[1] + (timeData[1] > 1 ? " Minutes " : " Minute");
-          } else {
-            this.rideDuration.nativeElement.innerHTML = "Less Than 1 Minute";
+            timeDataString = timeData[0] + (timeData[0] > 1 ? " Hours " : " Hour ");
+          } 
+          
+          if (timeData[1] > 0) {
+            timeDataString += timeData[1] + (timeData[1] > 1 ? " Minutes " : " Minute");
           }
+          
+          if (timeData[0] == 0 && timeData[1] == 0) {
+            timeDataString = "Less Than 1 Minute";
+          }
+
+          this.rideDuration.nativeElement.innerHTML = timeDataString;
 
           if (lengthInMeters < 1000) {
             this.distanceKilometers.nativeElement.innerHTML = `${Math.round(lengthInMeters / 10) / 100} Kilometers`;
