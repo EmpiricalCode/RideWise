@@ -37,6 +37,7 @@
     font-size: 30px;
     margin-top: 0;
     margin-bottom: 0;
+    text-transform: capitalize;
     color: var(--foreground);
     /* filter: brightness(120%); */
     /* background: -webkit-linear-gradient(90deg, rgb(var(--background)), var(--foreground) 40%);
@@ -107,9 +108,7 @@
     top: 0;
     bottom: 0;
     width: 100%;
-
     border-radius: 15px;
-    background: rgb(35, 35, 35);
     overflow: hidden;
 }
 

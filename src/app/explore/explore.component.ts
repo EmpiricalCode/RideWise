@@ -31,13 +31,16 @@ export class ExploreComponent implements AfterViewInit {
   @ViewChild("rideDuration") rideDuration!: ElementRef;
   @ViewChild("caloriesBurned") caloriesBurned!: ElementRef;
   @ViewChild("altitudeChange") altitudeChange!: ElementRef;
+  @ViewChild("weatherForcast") weatherForcast!: ElementRef;
+  @ViewChild("temperature") temperature!: ElementRef;
 
   // Instance variables
   lightTheme: string = "https://api.tomtom.com/style/1/style/22.2.1-9?key=ImJQ5OE7KBtQRP09rOL4mQXtlKm4qydm&map=2/basic_street-light";
   darkTheme: string = "https://api.tomtom.com/style/1/style/22.2.1-9?key=ImJQ5OE7KBtQRP09rOL4mQXtlKm4qydm&map=2/basic_street-dark";
 
   searchUrl: string = "https://api.tomtom.com/search/2/search";
-  altitudeUrl: string ="https://api.opentopodata.org/v1/eudem25m?locations=";
+  altitudeUrl: string = "https://api.open-elevation.com/api/v1/lookup?locations=";
+  weatherUrl: string = "http://api.weatherapi.com/v1/current.json?key=38a24f8373a94d8e872173145231007&aqi=yes&q=";
 
   map: any;
   position: any;
@@ -198,6 +201,7 @@ export class ExploreComponent implements AfterViewInit {
           const timeData = new Date(summaryData.travelTimeInSeconds * 1000).toISOString().substring(11, 16).split(":").map(Number);
           var timeDataString = "";
           
+          // Displaying time information
           if (timeData[0] > 0) {
             timeDataString = timeData[0] + (timeData[0] > 1 ? " Hours " : " Hour ");
           } 
@@ -212,6 +216,48 @@ export class ExploreComponent implements AfterViewInit {
 
           this.rideDuration.nativeElement.innerHTML = timeDataString;
 
+          // Nesting info API calls so the info section can be shown when requests are complete
+          // Displaying elevation information
+          this.http.get(this.altitudeUrl + this.startPosition.lat + "," + this.startPosition.lon).subscribe((dataStart: any) => {
+
+            if (dataStart.results) {
+
+              this.http.get(this.altitudeUrl + this.endPosition.lat + "," + this.endPosition.lon).subscribe((dataEnd: any) => {
+
+                if (dataEnd.results) {
+
+                  const start = dataStart.results[0].elevation;
+                  const end = dataEnd.results[0].elevation;
+
+                  if (end == start) {
+                    this.altitudeChange.nativeElement.innerHTML = `0 Difference In Elevation`;
+                  } else {
+                    this.altitudeChange.nativeElement.innerHTML = `${Math.abs(start - end)} Meter ${start > end ? "Decrease" : "Increase"} In Elevation`;
+                  }
+
+                  // Displaying weather information
+                  this.http.get(this.weatherUrl + this.startPosition.lat + "," + this.startPosition.lon).subscribe((data: any) => {
+                    
+                    if (data.current) {
+                      
+                      this.temperature.nativeElement.innerHTML = data.current.temp_c + " °C";
+                      this.weatherForcast.nativeElement.innerHTML = data.current.condition.text;
+                      this.showInfo();
+
+                    } else {
+                      this.spawnMapNotification("An error occured when fetching weather information.", "error", 3000);
+                    }
+                  })
+                } else {
+                  this.spawnMapNotification("An error occured when fetching altitude information.", "error", 3000);
+                }
+              })
+            } else {
+              this.spawnMapNotification("An error occured when fetching altitude information.", "error", 3000);
+            }
+          })
+
+          // Displaying distance information
           if (lengthInMeters < 1000) {
             this.distanceKilometers.nativeElement.innerHTML = `${Math.round(lengthInMeters / 10) / 100} Kilometers`;
             this.distanceMiles.nativeElement.innerHTML = `${Math.round(lengthInMeters * 0.621371 / 10)/ 100} Miles`;
@@ -219,10 +265,11 @@ export class ExploreComponent implements AfterViewInit {
             this.distanceKilometers.nativeElement.innerHTML = `${Math.round(lengthInMeters / 100) / 10} Kilometers`;
             this.distanceMiles.nativeElement.innerHTML = `${Math.round(lengthInMeters * 0.621371 / 100)/ 10} Miles`;
           } else {
-            this.distanceKilometers.nativeElement.innerHTML = `${Math.round(lengthInMeters / 1000).toLocaleString("en-US")} Kilometers`;
-            this.distanceMiles.nativeElement.innerHTML = `${Math.round(lengthInMeters * 0.621371 / 1000).toLocaleString("en-US")} Miles`;
+            this.distanceKilometers.nativeElement.innerHTML = `${Math.round(lengthInMeters / 1000)} Kilometers`;
+            this.distanceMiles.nativeElement.innerHTML = `${Math.round(lengthInMeters * 0.621371 / 1000)} Miles`;
           }
 
+          // Adding route layer
           this.map.addLayer({
             "id" : "route",
             "type" : "line",
@@ -242,7 +289,6 @@ export class ExploreComponent implements AfterViewInit {
 
           this.fitBounds(data.routes[0].legs[0].points);
           this.spawnMapNotification("Route successfully calculated.", "success", 1500);
-          this.showInfo();
           this.calculatingRoute = false;
 
         }).catch((error) => {
