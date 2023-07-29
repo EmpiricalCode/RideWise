@@ -216,6 +216,18 @@ export class ExploreComponent implements AfterViewInit {
 
           this.rideDuration.nativeElement.innerHTML = timeDataString;
 
+          // Displaying distance information
+          if (lengthInMeters < 1000) {
+            this.distanceKilometers.nativeElement.innerHTML = `${Math.round(lengthInMeters / 10) / 100} Kilometers`;
+            this.distanceMiles.nativeElement.innerHTML = `${Math.round(lengthInMeters * 0.621371 / 10)/ 100} Miles`;
+          } else if (lengthInMeters < 10000) {
+            this.distanceKilometers.nativeElement.innerHTML = `${Math.round(lengthInMeters / 100) / 10} Kilometers`;
+            this.distanceMiles.nativeElement.innerHTML = `${Math.round(lengthInMeters * 0.621371 / 100)/ 10} Miles`;
+          } else {
+            this.distanceKilometers.nativeElement.innerHTML = `${Math.round(lengthInMeters / 1000)} Kilometers`;
+            this.distanceMiles.nativeElement.innerHTML = `${Math.round(lengthInMeters * 0.621371 / 1000)} Miles`;
+          }
+
           // Nesting info API calls so the info section can be shown when requests are complete
           // Displaying elevation information
           this.http.get(this.altitudeUrl + this.startPosition.lat + "," + this.startPosition.lon).subscribe((dataStart: any) => {
@@ -236,13 +248,35 @@ export class ExploreComponent implements AfterViewInit {
                   }
 
                   // Displaying weather information
-                  this.http.get(this.weatherUrl + this.startPosition.lat + "," + this.startPosition.lon).subscribe((data: any) => {
+                  this.http.get(this.weatherUrl + this.startPosition.lat + "," + this.startPosition.lon).subscribe((weatherData: any) => {
                     
-                    if (data.current) {
+                    if (weatherData.current) {
                       
-                      this.temperature.nativeElement.innerHTML = data.current.temp_c + " °C";
-                      this.weatherForcast.nativeElement.innerHTML = data.current.condition.text;
+                      this.temperature.nativeElement.innerHTML = weatherData.current.temp_c + " °C";
+                      this.weatherForcast.nativeElement.innerHTML = weatherData.current.condition.text;
+
+                      // Adding route layer
+                      this.map.addLayer({
+                        "id" : "route",
+                        "type" : "line",
+                        "source" : {
+                          "type" : "geojson",
+                          "data" : data.toGeoJson()
+                        },
+                        "layout" : {
+                          "line-join" : "round",
+                          "line-cap" : "round"
+                        },
+                        "paint" : {
+                          "line-color" : "rgb(46, 135, 240)",
+                          "line-width" : 5,
+                        }
+                      }); 
+
+                      this.fitBounds(data.routes[0].legs[0].points);
+                      this.spawnMapNotification("Route successfully calculated.", "success", 1500);
                       this.showInfo();
+                      this.calculatingRoute = false;
 
                     } else {
                       this.spawnMapNotification("An error occured when fetching weather information.", "error", 3000);
@@ -256,40 +290,6 @@ export class ExploreComponent implements AfterViewInit {
               this.spawnMapNotification("An error occured when fetching altitude information.", "error", 3000);
             }
           })
-
-          // Displaying distance information
-          if (lengthInMeters < 1000) {
-            this.distanceKilometers.nativeElement.innerHTML = `${Math.round(lengthInMeters / 10) / 100} Kilometers`;
-            this.distanceMiles.nativeElement.innerHTML = `${Math.round(lengthInMeters * 0.621371 / 10)/ 100} Miles`;
-          } else if (lengthInMeters < 10000) {
-            this.distanceKilometers.nativeElement.innerHTML = `${Math.round(lengthInMeters / 100) / 10} Kilometers`;
-            this.distanceMiles.nativeElement.innerHTML = `${Math.round(lengthInMeters * 0.621371 / 100)/ 10} Miles`;
-          } else {
-            this.distanceKilometers.nativeElement.innerHTML = `${Math.round(lengthInMeters / 1000)} Kilometers`;
-            this.distanceMiles.nativeElement.innerHTML = `${Math.round(lengthInMeters * 0.621371 / 1000)} Miles`;
-          }
-
-          // Adding route layer
-          this.map.addLayer({
-            "id" : "route",
-            "type" : "line",
-            "source" : {
-              "type" : "geojson",
-              "data" : data.toGeoJson()
-            },
-            "layout" : {
-              "line-join" : "round",
-              "line-cap" : "round"
-            },
-            "paint" : {
-              "line-color" : "rgb(46, 135, 240)",
-              "line-width" : 5,
-            }
-          }); 
-
-          this.fitBounds(data.routes[0].legs[0].points);
-          this.spawnMapNotification("Route successfully calculated.", "success", 1500);
-          this.calculatingRoute = false;
 
         }).catch((error) => {
           console.log(error);
