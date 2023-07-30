@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import * as tt from '@tomtom-international/web-sdk-maps';
 import SearchBox from '@tomtom-international/web-sdk-plugin-searchbox';
@@ -40,7 +40,7 @@ export class ExploreComponent implements AfterViewInit {
 
   searchUrl: string = "https://api.tomtom.com/search/2/search";
   altitudeUrl: string = "https://api.open-elevation.com/api/v1/lookup?locations=";
-  weatherUrl: string = "https://api.weatherapi.com/v1/current.json?key=38a24f8373a94d8e872173145231007&aqi=yes&q=";
+  weatherUrl: string = "http://api.weatherapi.com/v1/forecast.json?key=38a24f8373a94d8e872173145231007&days=1&aqi=yes&alerts=yes&q=";
 
   map: any;
   position: any;
@@ -102,17 +102,20 @@ export class ExploreComponent implements AfterViewInit {
 
   hideInfo(callback: any) {
     this.infoContentContainer.nativeElement.style.opacity = "0";
+    this.alertContainer.nativeElement.innerHTML = "";
+    this.alertTitle.nativeElement.style.display = "none";
 
     setTimeout(() => {
-      this.alertContainer.nativeElement.innerHTML = "";
-      this.alertTitle.nativeElement.style.display = "none";
-
       callback();
     }, 300);
   }
 
   showInfo() {
     this.infoContentContainer.nativeElement.style.opacity = "1";
+
+    if (this.alertContainer.nativeElement.childElementCount > 0) {
+      this.alertTitle.nativeElement.style.display = "block";
+    }
   }
 
   spawnMapNotification(message: string, type: string, duration: number) {
@@ -142,6 +145,17 @@ export class ExploreComponent implements AfterViewInit {
         notificationElement.remove();
       }, 200);
     }, duration);
+  }
+
+  spawnAlert(text: string, severity: string) {
+
+    var alertElement = document.createElement("div");
+
+    alertElement.innerHTML = text;
+    alertElement.classList.add("alert");
+    alertElement.classList.add(severity);
+
+    this.alertContainer.nativeElement.append(alertElement);
   }
 
   fitBounds(routePoints: any) {
@@ -254,6 +268,46 @@ export class ExploreComponent implements AfterViewInit {
                       
                       this.temperature.nativeElement.innerHTML = weatherData.current.temp_c + " °C";
                       this.weatherForcast.nativeElement.innerHTML = weatherData.current.condition.text;
+
+                      // Severe weather alerts
+                      if (weatherData.current.air_quality["us-epa-index"] > 3) {
+                        this.spawnAlert("Air Quality Warning", "severe");
+                      }
+
+                      if (weatherData.current.air_quality["us-epa-index"] > 30) {
+                        this.spawnAlert("Strong Wind Warning", "severe");
+                      }
+
+                      if (weatherData.current.air_quality["us-epa-index"] > 70) {
+                        this.spawnAlert("High Humidity Warning", "severe");
+                      }
+
+                      if (weatherData.current.precip_mm > 8) {
+                        this.spawnAlert("Heavy Rain Warning", "severe");
+                      }
+
+                      // Moderate weather alerts
+                      if (weatherData.current.temp_c > 30) {
+                        this.spawnAlert("Heat Warning", "moderate");
+                      } else if (weatherData.current.temp_c < 0) {
+                        this.spawnAlert("Cold Warning", "moderate");
+                      }
+
+                      if (weatherData.current.air_quality["us-epa-index"] > 1 && weatherData.current.air_quality["us-epa-index"] <= 3) {
+                        this.spawnAlert("Air Quality Warning", "moderate");
+                      } 
+
+                      if (weatherData.current.gust_mph > 25 && weatherData.current.gust_mph <= 30) {
+                        this.spawnAlert("Strong Wind Warning", "moderate");
+                      }
+
+                      if (weatherData.current.humidity > 60 && weatherData.current.gust_mph <= 70) {
+                        this.spawnAlert("High Humidity Warning", "moderate");
+                      }
+
+                      if (weatherData.current.precip_mm > 2.5 && weatherData.current.precip_mm <= 8) {
+                        this.spawnAlert("Rain Warning", "moderate");
+                      }
 
                       // Adding route layer
                       this.map.addLayer({
