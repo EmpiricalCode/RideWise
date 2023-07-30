@@ -270,6 +270,10 @@ export class ExploreComponent implements AfterViewInit {
                       this.weatherForcast.nativeElement.innerHTML = weatherData.current.condition.text;
 
                       // Severe weather alerts
+                      if (weatherData.current.temp_c > 45) {
+                        this.spawnAlert("Heat Warning", "severe");
+                      }
+
                       if (weatherData.current.air_quality["us-epa-index"] > 3) {
                         this.spawnAlert("Air Quality Warning", "severe");
                       }
@@ -287,7 +291,7 @@ export class ExploreComponent implements AfterViewInit {
                       }
 
                       // Moderate weather alerts
-                      if (weatherData.current.temp_c > 30) {
+                      if (weatherData.current.temp_c > 30 && weatherData.current.temp_c < 45) {
                         this.spawnAlert("Heat Warning", "moderate");
                       } else if (weatherData.current.temp_c < 0) {
                         this.spawnAlert("Cold Warning", "moderate");
@@ -331,6 +335,7 @@ export class ExploreComponent implements AfterViewInit {
                       this.spawnMapNotification("Route successfully calculated.", "success", 1500);
                       this.showInfo();
                       this.calculatingRoute = false;
+                      this.map.resize();
 
                     } else {
                       this.spawnMapNotification("An error occured when fetching weather information.", "error", 3000);
