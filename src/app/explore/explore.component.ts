@@ -217,9 +217,15 @@ export class ExploreComponent implements AfterViewInit {
           const timeData = new Date(summaryData.travelTimeInSeconds * 1000).toISOString().substring(11, 16).split(":").map(Number);
           var timeDataString = "";
           
+          const days = Math.floor(summaryData.travelTimeInSeconds / 86400);
+
           // Displaying time information
+          if (days > 0) {
+            timeDataString = days + (days > 1 ? " Days " : " Day ");
+          }
+
           if (timeData[0] > 0) {
-            timeDataString = timeData[0] + (timeData[0] > 1 ? " Hours " : " Hour ");
+            timeDataString += timeData[0] + (timeData[0] > 1 ? " Hours " : " Hour ");
           } 
           
           if (timeData[1] > 0) {
