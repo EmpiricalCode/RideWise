@@ -208,6 +208,8 @@ export class ExploreComponent implements AfterViewInit {
 
       this.hideInfo(() => {
 
+        this.map.resize();
+
         services.calculateRoute(routeOptions).then((data) => {
 
           const summaryData = data.routes[0].summary;
@@ -331,11 +333,11 @@ export class ExploreComponent implements AfterViewInit {
                         }
                       }); 
 
-                      this.fitBounds(data.routes[0].legs[0].points);
                       this.spawnMapNotification("Route successfully calculated.", "success", 1500);
                       this.showInfo();
                       this.calculatingRoute = false;
                       this.map.resize();
+                      this.fitBounds(data.routes[0].legs[0].points);
 
                     } else {
                       this.spawnMapNotification("An error occured when fetching weather information.", "error", 3000);
