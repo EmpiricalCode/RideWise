@@ -40,7 +40,7 @@ export class ExploreComponent implements AfterViewInit {
 
   searchUrl: string = "https://api.tomtom.com/search/2/search";
   altitudeUrl: string = "https://api.open-elevation.com/api/v1/lookup?locations=";
-  weatherUrl: string = "http://api.weatherapi.com/v1/forecast.json?key=38a24f8373a94d8e872173145231007&days=1&aqi=yes&alerts=yes&q=";
+  weatherUrl: string = "https://api.weatherapi.com/v1/forecast.json?key=38a24f8373a94d8e872173145231007&days=1&aqi=yes&alerts=yes&q=";
 
   map: any;
   position: any;
