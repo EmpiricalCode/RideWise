@@ -78,6 +78,7 @@
     padding-top: 20px;
     padding-left: 50px;
     border-left: 1px solid var(--border-color);
+    transition: border 0.2s;
 }
 
 #map-configuration-container {
@@ -234,6 +235,7 @@
     height: 10px;
     background: var(--border-color);
     border-radius: 5px;
+    transition: background 0.2s;
 }
 
 .map-configuration-input-container {
@@ -260,6 +262,7 @@
     padding-left: 40px;
     background: var(--input-background-color);
     border: none;
+    transition: background 0.2s;
 }
 
 .map-configuration-input:focus {
@@ -272,6 +275,7 @@
     width: calc(100% - 35px);
     border-radius: 15px;
     background-color: rgb(var(--background));
+    transition: background 0.2s, border 0.2s;
 }
 
 .info-snippet-title {

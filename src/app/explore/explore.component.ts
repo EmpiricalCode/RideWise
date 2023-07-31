@@ -5,6 +5,7 @@ import * as tt from '@tomtom-international/web-sdk-maps';
 import SearchBox from '@tomtom-international/web-sdk-plugin-searchbox';
 import { services } from '@tomtom-international/web-sdk-services';
 import { Observable } from 'rxjs';
+import { ThemeService } from '../theme.service';
 
 @Component({
   selector: 'app-explore',
@@ -60,7 +61,7 @@ export class ExploreComponent implements AfterViewInit {
   endingPointAutocompleteResults: any = [];
 
   // Constructor
-  constructor(private titleService: Title, private http: HttpClient) { 
+  constructor(private titleService: Title, private http: HttpClient, private themeService: ThemeService) { 
     this.titleService.setTitle("RideWise - Explore");
   }
 
@@ -70,7 +71,7 @@ export class ExploreComponent implements AfterViewInit {
     this.map = tt.map({
       key: "ImJQ5OE7KBtQRP09rOL4mQXtlKm4qydm",
       container: "map",
-      style: this.lightTheme,
+      style: this.themeService.theme ? this.lightTheme : this.darkTheme,
       zoom: 16,
     })
 
@@ -79,6 +80,15 @@ export class ExploreComponent implements AfterViewInit {
     navigator.geolocation.getCurrentPosition((position: any) => {
       this.position = position;
       this.map.setCenter([position.coords.longitude, position.coords.latitude]);
+    })
+
+    // Changing map theme
+    this.themeService.subscription.subscribe((res) => {
+      if (res) {
+        this.map.setStyle(this.lightTheme);
+      } else {
+        this.map.setStyle(this.darkTheme);
+      }
     })
 
     // Clicking off search bars
@@ -98,6 +108,10 @@ export class ExploreComponent implements AfterViewInit {
         this.inputEndAutocomplete.nativeElement.style.display = "none";
       } 
     })
+  }
+
+  toggleMapTheme() {
+    this.map.setStyle(this.darkTheme);
   }
 
   hideInfo(callback: any) {

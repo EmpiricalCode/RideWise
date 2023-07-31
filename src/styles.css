@@ -15,7 +15,7 @@
 }
 
 /* Dark Theme */
-:root:has(#test:checked) {
+:root:has(#theme-switch-checkbox:checked) {
     --foreground: rgb(111, 144, 194);
     --background: 25, 26, 28;
     --title-color: rgb(234, 234, 234);
@@ -37,6 +37,11 @@
     flex-direction: row;
     width: calc(100% - 200px);
     padding: 0 100px 0 100px;
+}
+
+/* Element selectors */
+body {
+    transition: 0.2s;
 }
 
 /* Class selectors */
