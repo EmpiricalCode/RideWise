@@ -48,6 +48,7 @@ export class ExploreComponent implements AfterViewInit {
 
   startPosition: any;
   endPosition: any;
+  routeData: any;
 
   calculatingRoute: boolean = false;
 
@@ -84,10 +85,35 @@ export class ExploreComponent implements AfterViewInit {
 
     // Changing map theme
     this.themeService.subscription.subscribe((res) => {
+
       if (res) {
-        this.map.setStyle(this.lightTheme);
+        this.map.setStyle(this.lightTheme)
       } else {
         this.map.setStyle(this.darkTheme);
+      }
+    })
+
+    this.map.on("style.load", () => {
+
+      if (this.routeData != null) {
+        
+        this.removeRoute();
+        this.map.addLayer({
+          "id" : "route",
+          "type" : "line",
+          "source" : {
+            "type" : "geojson",
+            "data" : this.routeData.toGeoJson()
+          },
+          "layout" : {
+            "line-join" : "round",
+            "line-cap" : "round"
+          },
+          "paint" : {
+            "line-color" : "rgb(46, 135, 240)",
+            "line-width" : 5,
+          }
+        }); 
       }
     })
 
@@ -225,6 +251,8 @@ export class ExploreComponent implements AfterViewInit {
         this.map.resize();
 
         services.calculateRoute(routeOptions).then((data) => {
+
+          this.routeData = data;
 
           const summaryData = data.routes[0].summary;
           const lengthInMeters = summaryData.lengthInMeters;
@@ -399,6 +427,7 @@ export class ExploreComponent implements AfterViewInit {
     this.startPosition = result.position;
     this.inputStart.nativeElement.value = result.address.freeformAddress;
 
+    this.routeData = null;
     this.searchStartPoint(this.inputStart.nativeElement.value);
     this.removeRoute();
 
@@ -426,6 +455,7 @@ export class ExploreComponent implements AfterViewInit {
     this.endPosition = result.position;
     this.inputEnd.nativeElement.value = result.address.freeformAddress;
 
+    this.routeData = null;
     this.searchEndPoint(this.inputEnd.nativeElement.value);
     this.removeRoute();
     
