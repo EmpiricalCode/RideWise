@@ -63,8 +63,8 @@
         <p class="section-title">Ride Details</p>
         
         <div #infoContentContainer id="info-content-container">
-            <p #distanceKilometers id="distance-kilometers">16 Kilometers</p>
-            <p #distanceMiles id="distance-miles">5.6 Miles</p>
+            <p #distanceKilometers id="distance-kilometers">Kilometers</p>
+            <p #distanceMiles id="distance-miles">Miles</p>
 
             <div id="info-snippet-container">
 
@@ -78,36 +78,24 @@
 
                 <div class="info-snippet">
                     <p class="info-snippet-title">Departure Conditions</p>
-                    <p #weatherForcast id="weather-forcast">Overcast</p>
-                    <p #temperature id="temperature">25 °C</p>
+                    <p #weatherForcast id="weather-forcast">Weather</p>
+                    <p #temperature id="temperature">N/A</p>
                 </div>
 
                 <div class="info-snippet">
                     <p class="info-snippet-title">Time Elapsed</p>
-                    <p #rideDuration class="info-snippet-text">1 Hour 12 Minutes</p>
+                    <p #rideDuration class="info-snippet-text">N/A</p>
                 </div>
 
                 <div class="info-snippet">
                     <p class="info-snippet-title">Elevation</p>
-                    <p #altitudeChange class="info-snippet-text">210 Meters Above Sea Level</p>
+                    <p #altitudeChange class="info-snippet-text">N/A</p>
                 </div>             
             </div>
 
-            <p #alertTitle class="section-title">Alerts</p>
+            <p #alertTitle style="display: none;" class="section-title">Alerts</p>
 
-            <div #alertContainer id="alert-container">
-                <div class="alert severe">
-                    Severe Thunderstorm Warning
-                </div>
-
-                <div class="alert moderate">
-                    Poor Air Quality
-                </div>
-
-                <div class="alert moderate">
-                    Sunset Will Occur During Trip
-                </div>
-            </div>
+            <div #alertContainer id="alert-container"></div>
         </div>
     </div>
 </div>

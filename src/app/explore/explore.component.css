@@ -65,7 +65,7 @@
 
 #info-content-container {
     transition: 0.3s;
-    opacity: 0;
+    /* opacity: 0; */
 }
 
 #map-container {
