@@ -1,0 +1,56 @@
+:host {
+    flex-grow: 1;
+    display: flex;
+    align-items: stretch;
+}
+
+/* Element selectors */
+a {
+    color: var(--foreground);
+    text-decoration: underline;
+}
+
+/* ID Selectors */
+#content-container {
+    padding: 0;
+    width: 1000px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    left: calc(50% - 500px);
+}
+
+/* Class selectors */
+.article-title {
+    font-family: "Montserrat";
+    font-weight: 600;
+    font-size: 50px;
+    color: var(--foreground);
+    margin-top: 100px;
+    margin-bottom: 0;
+}
+
+.article-subtitle {
+    font-family: "Gotham Medium";
+    font-size: 15px;
+    margin-top: 10px;
+    color: var(--text-color);
+}
+
+.article-paragraph {
+    font-family: "Gotham";
+    font-size: 18px;
+    color: var(--text-color);
+    line-height: 35px;
+    margin-bottom: 0;
+}
+
+/* Exceptions */
+@media only screen and (max-width: 1200px) {
+    
+    #content-container {
+        width: calc(100% - 200px);
+        left: 0;
+        padding: 0 100px 0 100px;
+    }
+}
