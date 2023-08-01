@@ -291,6 +291,7 @@
     margin: 7px 0 7px 0;
 }
 
+/* Exceptions */
 @media only screen and (max-width: 1400px) {
 
     #map-container {
