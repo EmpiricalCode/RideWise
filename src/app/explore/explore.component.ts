@@ -73,7 +73,7 @@ export class ExploreComponent implements AfterViewInit {
       key: "ImJQ5OE7KBtQRP09rOL4mQXtlKm4qydm",
       container: "map",
       style: this.themeService.theme ? this.lightTheme : this.darkTheme,
-      zoom: 16,
+      zoom: this.position ? 16 : 1,
     })
 
     this.map.dragRotate.disable();
@@ -494,7 +494,7 @@ export class ExploreComponent implements AfterViewInit {
 
   search(query: String) {
     return new Observable<any>((observer) => {
-      this.http.get(this.searchUrl + `/${query}.json?limit=5&lat=${this.position.coords.latitude}&lon=${this.position.coords.longitude}&minFuzzyLevel=1&maxFuzzyLevel=2&view=Unified&key=ImJQ5OE7KBtQRP09rOL4mQXtlKm4qydm`).subscribe((data: any) => {
+      this.http.get(this.searchUrl + `/${query}.json?limit=5${this.position ? "&lat=" + this.position.coords.latitude + "&lon=" + this.position.coords.longitude : ""}&minFuzzyLevel=1&maxFuzzyLevel=2&view=Unified&key=ImJQ5OE7KBtQRP09rOL4mQXtlKm4qydm`).subscribe((data: any) => {
         observer.next(data.results);
       })
     })
