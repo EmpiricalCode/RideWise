@@ -298,6 +298,8 @@
         width: 100%;
         height: calc(100vh - 180px);
         padding-bottom: 10px;
+        border-left: none;
+        padding-left: 0;
     }
 
     #info-container {
