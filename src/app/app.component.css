@@ -92,6 +92,12 @@
     transition: background 0.2s;
 }
 
+#site-logo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
 #site-title {
     font-size: 20px;
     font-family: "Montserrat";
