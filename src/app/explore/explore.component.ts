@@ -52,12 +52,6 @@ export class ExploreComponent implements AfterViewInit {
 
   calculatingRoute: boolean = false;
 
-  location: Observable<any> = new Observable<any>((observer) => {
-    navigator.geolocation.getCurrentPosition((position: any) => {
-      observer.next(position);
-    })
-  });
-
   startingPointAutocompleteResults: any = [];
   endingPointAutocompleteResults: any = [];
 
@@ -73,13 +67,13 @@ export class ExploreComponent implements AfterViewInit {
       key: "ImJQ5OE7KBtQRP09rOL4mQXtlKm4qydm",
       container: "map",
       style: this.themeService.theme ? this.lightTheme : this.darkTheme,
-      zoom: this.position ? 16 : 1,
     })
 
     this.map.dragRotate.disable();
 
     navigator.geolocation.getCurrentPosition((position: any) => {
       this.position = position;
+      this.map.setZoom(15);
       this.map.setCenter([position.coords.longitude, position.coords.latitude]);
     })
 
